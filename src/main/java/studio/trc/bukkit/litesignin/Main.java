@@ -1,5 +1,6 @@
 package studio.trc.bukkit.litesignin;
 
+import space.arim.morepaperlib.MorePaperLib;
 import studio.trc.bukkit.litesignin.config.ConfigurationType;
 import studio.trc.bukkit.litesignin.config.ConfigurationUtil;
 import studio.trc.bukkit.litesignin.command.SignInCommand;
@@ -38,11 +39,13 @@ public class Main
      */
     private static Main main;
     private static Metrics metrics;
+    private static MorePaperLib morePaperLib;
     
     @Override
     public void onEnable() {
         main = this;
-        
+        morePaperLib = new MorePaperLib(this);
+
         SignInPluginProperties.reloadProperties();
         
         if (!getDescription().getName().equals("LiteSignIn")) {
@@ -56,9 +59,9 @@ public class Main
         PluginControl.reload();
         NMSManager.reloadNMS();
         SignInPluginProperties.sendOperationMessage("PluginEnabledSuccessfully", MessageUtil.getDefaultPlaceholders());
-        
+
         //It will run after the server is started.
-        Bukkit.getScheduler().runTask(this, () -> {
+        morePaperLib.scheduling().globalRegionalScheduler().run(() -> {
             if (PluginControl.enableUpdater()) {
                 Updater.checkUpdate();
             }
@@ -104,6 +107,10 @@ public class Main
     
     public static Metrics getMetrics() {
         return metrics;
+    }
+
+    public static MorePaperLib getMorePaperLib() {
+        return morePaperLib;
     }
     
     private void registerEvent() {

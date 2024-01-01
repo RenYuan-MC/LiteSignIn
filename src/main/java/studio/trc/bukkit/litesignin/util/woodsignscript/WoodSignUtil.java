@@ -21,7 +21,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import studio.trc.bukkit.litesignin.Main;
 import studio.trc.bukkit.litesignin.config.Configuration;
@@ -134,17 +133,14 @@ public class WoodSignUtil
         database.set("Database." + number + ".Script", woodSign.getWoodSignTitle());
         saveScriptedSigns();
         if (reloadFile) loadSigns();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Sign sign = (Sign) block.getState();
-                sign.setLine(0, MessageUtil.toColor(woodSign.getWoodSignText().getLine1()));
-                sign.setLine(1, MessageUtil.toColor(woodSign.getWoodSignText().getLine2()));
-                sign.setLine(2, MessageUtil.toColor(woodSign.getWoodSignText().getLine3()));
-                sign.setLine(3, MessageUtil.toColor(woodSign.getWoodSignText().getLine4()));
-                sign.update();
-            }
-        }.runTaskLater(Main.getInstance(), 1);
+        Main.getMorePaperLib().scheduling().regionSpecificScheduler(block.getLocation()).runDelayed(() -> {
+            Sign sign = (Sign) block.getState();
+            sign.setLine(0, MessageUtil.toColor(woodSign.getWoodSignText().getLine1()));
+            sign.setLine(1, MessageUtil.toColor(woodSign.getWoodSignText().getLine2()));
+            sign.setLine(2, MessageUtil.toColor(woodSign.getWoodSignText().getLine3()));
+            sign.setLine(3, MessageUtil.toColor(woodSign.getWoodSignText().getLine4()));
+            sign.update();
+        }, 1L);
     }
     
     public static boolean removeWoodSignScript(Location location) {

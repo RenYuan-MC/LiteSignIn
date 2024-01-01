@@ -141,7 +141,7 @@ public class Join
     }
     
     public void schedule(Storage data, Player player, boolean unableToHoldCards, boolean autoSignIn) {
-        Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
+        Main.getMorePaperLib().scheduling().globalRegionalScheduler().run(() -> {
             if (unableToHoldCards) {
                 if (data.getRetroactiveCard() > 0) {
                     data.takeRetroactiveCard(data.getRetroactiveCard());

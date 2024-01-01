@@ -1,6 +1,5 @@
 package studio.trc.bukkit.litesignin.reward.command;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -28,6 +27,10 @@ public class SignInRewardCommand
     }
 
     public void runWithThePlayer(Player player) {
+        Main.getMorePaperLib().scheduling().globalRegionalScheduler().run(() -> runWithThePlayer0(player));
+    }
+
+    public void runWithThePlayer0(Player player) {
         Map<String, String> placeholders = MessageUtil.getDefaultPlaceholders();
         placeholders.put("{player}", player.getName());
         String command_replaced = MessageUtil.replacePlaceholders(player, command, placeholders);
